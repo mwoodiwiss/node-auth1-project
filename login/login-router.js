@@ -9,9 +9,10 @@ router.post("/", (req, res) => {
   db("users")
     .where({ username })
     .first()
-    .then(users => {
-      if (users && bcrypt.compareSync(password, users.password)) {
-        res.status(200).json({ message: `Welcome ${users.username}!` });
+    .then(user => {
+      if (user && bcrypt.compareSync(password, user.password)) {
+        req.session.user = user;
+        res.status(200).json({ message: `Welcome ${user.username}!` });
       } else {
         res.status(401).json({ message: "Invalid Credentials" });
       }
